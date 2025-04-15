@@ -140,7 +140,7 @@ export const forgotPassword = async (req, res) => {
     user.resetPasswordExpires = expirationDate;
     await user.save();
 
-    const resetLink = `http://localhost:7777/api/v1/reset-password/${token}`;
+    const resetLink = `https://haprian-api.onrender.com/api/v1/reset-password/${token}`;
 
 
     await sendForgotPasswordEmail(email, resetLink);
