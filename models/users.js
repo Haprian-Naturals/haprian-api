@@ -18,6 +18,7 @@ export const userSchema = new Schema(
       type: String,
       default: "local",
     },
+    role: { type: String, enum: ["user","admin"], default: "user" },
     resetPasswordToken: String,
     resetPasswordExpires: Date,
   },

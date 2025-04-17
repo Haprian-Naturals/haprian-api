@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import "dotenv/config";
 import { userRouter } from "./routes/userRoutes.js";
-
+import { productRouter } from "./routes/productRoute.js";
 
 //Database connection
 async function connectionDatabase() {
@@ -26,6 +26,7 @@ app.use(cors());
 
 // ROUTES
 app.use("/api/v1", userRouter);
+app.use("/api/v1", productRouter)
 
 // LISTEN FOR INCOMING REQUESTS
 const port = process.env.PORT || 7777;

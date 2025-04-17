@@ -86,7 +86,7 @@ export const loginUser = async (req, res, next) => {
       $or: [{ username: value.username }, { email: value.email }],
     });
     if (!user) {
-      return res.status(404).json("user does not exists");
+      return res.status(404).json("User does not exists");
     }
 
     // Check if the user has verified their email
@@ -101,7 +101,7 @@ export const loginUser = async (req, res, next) => {
       return res.status(401).json("invalid credentials");
     }
     //generate access token for user
-    const accessToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
+    const accessToken = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET_KEY, {
       expiresIn: "24h",
     });
     //return response
@@ -109,6 +109,7 @@ export const loginUser = async (req, res, next) => {
       message: "Login Successfull",
       accessToken,
       user: { id: user.id },
+      role: user.role
     });
   } catch (error) {
     next(error);
