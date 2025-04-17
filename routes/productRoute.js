@@ -18,7 +18,7 @@ productRouter.post(
   "/add-product",
   auth,
   authorize(["admin"]),
-  adPicturesUpload.array("image", 3),
+  adPicturesUpload.single("image"),
   addProduct
 );
 

@@ -6,9 +6,7 @@ export const addProduct = async (req, res, next) => {
     const { error, value } = productValidator.validate(
       {
         ...req.body,
-        image: req.files?.map((file) => {
-          return file.filename;
-        }),
+        image: req.file?.filename
       },
       {
         abortEarly: false,
