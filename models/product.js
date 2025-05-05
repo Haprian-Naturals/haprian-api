@@ -1,6 +1,7 @@
 import { Schema, model,Types } from "mongoose";
 import normalize from "normalize-mongoose";
 
+
 // Define the category enum values
 const CategoryEnum = ["hair care", "skin care", "natural oil"];
 
@@ -32,6 +33,7 @@ const productSchema = new Schema(
     timestamps: true,
   }
 );
+
 
 productSchema.plugin(normalize);
 
