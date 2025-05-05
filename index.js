@@ -1,26 +1,26 @@
-import express from "express";
+import express, { Router } from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import "dotenv/config";
-import { userRouter } from "./routes/userRoutes.js";
-import { productRouter } from "./routes/productRoute.js";
-import { cartRouter } from "./routes/cartRoute.js";
+import router from "./routes/index.js";
 
 //Database connection
-async function connectionDatabase() {
-  try {
-      await mongoose.connect(process.env.MONGO_URI, {
-          useNewUrlParser: true,
-          useUnifiedTopology: true,
-      });
-      console.log("Database is connected");
-  } catch (error) {
-      console.error("Database connection error:", error.message); // Log the error message
-      throw new Error("Database is NOT connected!!"); // Adjusted to only throw a new error with the message
-  }
-}
+// async function connectionDatabase() {
+//   try {
+//       await mongoose.connect(process.env.MONGO_URI, {
+//           useNewUrlParser: true,
+//           useUnifiedTopology: true,
+//       });
+//       console.log("Database is connected");
+//   } catch (error) {
+//       console.error("Database connection error:", error.message); // Log the error message
+//       throw new Error("Database is NOT connected!!"); // Adjusted to only throw a new error with the message
+//   }
+// }
 
-connectionDatabase();
+await mongoose.connect(process.env.MONGO_URI)
+.then(data => console.log('Database connected'))
+.catch(err => console.log('error'))
 
 // CREATE AN EXPRESS APP
 const app = express();
@@ -30,9 +30,7 @@ app.use(express.json());
 app.use(cors());
 
 // ROUTES
-app.use("/api/v1", userRouter);
-app.use("/api/v1", productRouter);
-app.use("/api/v1", cartRouter)
+app.use(router);
 
 // LISTEN FOR INCOMING REQUESTS
 const port = process.env.PORT || 7777;

@@ -29,7 +29,7 @@ export const registerUser = async (req, res, next) => {
     const result = await UserModel.create({
       ...value,
       password: hashedPassword,
-      verificationCode: verificationCode,
+      verificationCode,
       verified: false,
     });
 
@@ -86,7 +86,7 @@ export const loginUser = async (req, res, next) => {
       $or: [{ username: value.username }, { email: value.email }],
     });
     if (!user) {
-      return res.status(404).json("User does not exists");
+      return res.status(404).json("User does not exist.");
     }
 
     // Check if the user has verified their email
