@@ -24,7 +24,20 @@ await mongoose.connect(process.env.MONGO_URI)
 
 // CREATE AN EXPRESS APP
 const app = express();
-app.use(cors());
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  
+];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    
+  })
+);
+
+app.options("*", cors());
 
 // USE GLOBAL MIDDLEWARES
 app.use(express.json());
