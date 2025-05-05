@@ -2,7 +2,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
-import { loginUserValidator, registerUserValidator } from "../validators/userValidator.js";
+import { loginUserValidator, registerUserValidator, verifyEmailValidator } from "../validators/userValidator.js";
 import { sendForgotPasswordEmail, sendVerificationEmail } from "../utils/mailing.js";
 import { UserModel } from "../models/users.js";
 
@@ -20,7 +20,7 @@ export const registerUser = async (req, res, next) => {
     if (user) {
       return res.status(409).json("user already exists");
     }
-    
+
     //hash plaintext password
     const hashedPassword = bcrypt.hashSync(value.password, 10);
     const verificationCode = crypto.randomBytes(3).toString("hex");
@@ -33,11 +33,22 @@ export const registerUser = async (req, res, next) => {
       verified: false,
     });
 
-    await sendVerificationEmail(value.email, verificationCode, result.username);
+    const info = await sendVerificationEmail(
+      value.email,
+      verificationCode,
+      value.username
+    );
     //return response
-    return res
-      .status(201)
-      .json({ message: `Welcome ${value.username} to Haprian Naturals` });
+
+    if (info.accepted && info.accepted.includes(value.email))
+      return res
+        .status(201)
+        // .json({ message: `Welcome ${value.username} to Haprian Naturals. Verification email sent.` });
+        .json({code: result.verificationCode, ...value})
+
+    // Email failed to send
+    res.status(500).json({ error: "Failed to send verification email." });
+
   } catch (error) {
     next(error);
 
@@ -46,14 +57,18 @@ export const registerUser = async (req, res, next) => {
 
 export const verifyEmail = async (req, res, next) => {
   try {
-    const { email, verificationCode } = req.body;
+    const { error, value } = verifyEmailValidator.validate(req.body);
 
-    const user = await UserModel.findOne({ email });
+    if (error) {
+      return res.status(422).json(error);
+    }
+
+    const user = await UserModel.findOne({ email : value.email });
     if (!user) {
       return res.status(404).json({ message: "Email not found" });
     }
 
-    if (user.verificationCode !== verificationCode) {
+    if (user.verificationCode !== value.verificationCode) {
       return res.status(400).json({ message: "Invalid Verification Code" });
     }
 
@@ -66,8 +81,8 @@ export const verifyEmail = async (req, res, next) => {
 
     return res.status(200).json({
       message: "Email Verified Successfully",
-      accessToken,
-      user: { id: user.id },
+      accessToken
+      // user: { id: user.id },
     });
   } catch (error) {
     next(error);
@@ -107,7 +122,7 @@ export const loginUser = async (req, res, next) => {
     //return response
     return res.status(200).json({
       message: "Login Successfull",
-      accessToken,
+      token: accessToken,
       user: { id: user.id },
       role: user.role
     });

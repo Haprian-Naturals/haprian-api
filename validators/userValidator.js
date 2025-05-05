@@ -13,3 +13,8 @@ export const loginUserValidator = Joi.object({
   email: Joi.string().optional(),
   password: Joi.string().required(),
 });
+
+export const verifyEmailValidator = Joi.object({
+  email: Joi.string().email().required(),
+  verificationCode: Joi.string().required()
+})

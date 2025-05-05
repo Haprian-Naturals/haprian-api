@@ -24,10 +24,11 @@ await mongoose.connect(process.env.MONGO_URI)
 
 // CREATE AN EXPRESS APP
 const app = express();
+app.use(cors());
 
 // USE GLOBAL MIDDLEWARES
 app.use(express.json());
-app.use(cors());
+
 
 // ROUTES
 app.use(router);
