@@ -12,11 +12,7 @@ await mongoose.connect(process.env.MONGO_URI)
 const app = express();
 
 // Enable CORS for all routes or specific origins
-app.use(cors({
-  origin: 'http://localhost:5173', // Allow your development origin
-  methods: ['GET', 'POST', 'OPTIONS'], // Allow these methods
-  allowedHeaders: ['Content-Type', 'Authorization'] // Allow these headers
-}));
+app.use(cors());
 
 // USE GLOBAL MIDDLEWARES
 app.use(express.json());
