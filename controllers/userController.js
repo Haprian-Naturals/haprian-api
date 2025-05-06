@@ -125,6 +125,7 @@ export const loginUser = async (req, res, next) => {
       message: "Login Successfull",
       token: accessToken,
       user: { id: user.id },
+      name: user.username,
       role: user.role
     });
   } catch (error) {
