@@ -55,8 +55,12 @@ export const getProducts = async (req, res, next) => {
 };
 
 export const getProduct = async (req, res, next) => {
-  const oneProduct = await ProductModel.findById(req.params.id);
-  res.status(200).json({ product: oneProduct });
+  try {
+    const oneProduct = await ProductModel.findById(req.params.id);
+    return oneProduct ? res.status(200).json(oneProduct): res.status(404).json('Product not found');
+  } catch (error) {
+    next(error);
+  }
 };
 
 
@@ -68,7 +72,7 @@ export const updateProduct = async (req, res, next) => {
 
     if (req.file && req.file.filename) {
       // Save the Cloudinary image URL
-      updateData.image = req.file.filename;
+      updateData.image = req.file.path;
     }
 
     const result = await ProductModel.findByIdAndUpdate(
