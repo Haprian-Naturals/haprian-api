@@ -15,7 +15,7 @@ export const productRouter = Router();
 
 // ROUTES
 productRouter.post(
-  "/product",
+  "/products",
   auth,
   authorize(["admin"]),
   adPicturesUpload.single("image"),
@@ -23,16 +23,16 @@ productRouter.post(
 );
 
 productRouter.patch(
-  "/product/:id",
+  "/products/:id",
   auth,
   authorize(["admin"]),
   updateProduct
 );
 
-productRouter.get("/product", getProducts);
+productRouter.get("/products", getProducts);
 
 productRouter.get("/product/:id", getProduct);
 
 productRouter.delete(
-  "/product/:id",
+  "/products/:id",
    auth, authorize(["admin"]), deleteProduct);
