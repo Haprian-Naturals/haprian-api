@@ -59,16 +59,39 @@ export const getProduct = async (req, res, next) => {
   res.status(200).json({ product: oneProduct });
 };
 
+
+
+
 export const updateProduct = async (req, res, next) => {
   try {
-    const result = await ProductModel.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
-    return res.status(200).json({ message: "Product updated successfully" ,updatedProduct: result });
+    const updateData = { ...req.body };
+
+    if (req.file && req.file.filename) {
+      // Save the Cloudinary image URL
+      updateData.image = req.file.filename;
+    }
+
+    const result = await ProductModel.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      {
+        new: true,
+      }
+    );
+
+    return result
+      ? res
+          .status(200)
+          .json({
+            message: "Product updated successfully",
+            updatedProduct: result,
+          })
+      : res.status(404).json("Product not found");
   } catch (error) {
     next(error);
   }
 };
+
 
 export const deleteProduct = async (req, res) => {
   const deleteById = await ProductModel.findByIdAndDelete(
