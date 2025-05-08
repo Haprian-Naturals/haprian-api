@@ -82,8 +82,9 @@ export const verifyEmail = async (req, res, next) => {
     return res.status(200).json({
       message: "Email Verified Successfully",
       accessToken,
-      username: user.username
-      // user: { id: user.id },
+      user: { id: user.id },
+      name: user.username,
+      role: user.role
     });
   } catch (error) {
     next(error);

@@ -16,7 +16,10 @@ export const addProduct = async (req, res, next) => {
       return res.status(422).json(error.details[0].message);
     }
     // Save product info in database
-    const result = await ProductModel.create(value);
+    const result = await ProductModel.create({
+      ...value,
+      userId: req.auth.id,
+    });
 
     return res.status(201).json(result);
   } catch (error) {
