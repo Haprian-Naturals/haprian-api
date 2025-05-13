@@ -1,20 +1,20 @@
 import { OrderModel } from "../models/order.js";
+import { createOrderValidator } from "../validators/order.js";
 
 
 export const createOrder = async (req, res) => {
-  const { items, totalPrice } = req.body;
+  // Validate input
+  const {error,value} = createOrderValidator.validate(req.body);
+
+  if(error)
+  {
+    return res.status(422).json(error.details[0].message);
+  }
 
   try {
-    // Validate input
-    if (!items || !totalPrice) {
-      return res.status(400).json({ message: "Items and totalPrice are required." });
-    }
-
+    
     // Create a new order
-    const newOrder = new OrderModel({
-     items,
-      totalPrice,
-    });
+    const newOrder = new OrderModel(value);
 
     // Save the order to the database
     const savedOrder = await newOrder.save();
