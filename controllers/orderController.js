@@ -1,7 +1,6 @@
 import { OrderModel } from "../models/order.js";
 import { createOrderValidator } from "../validators/order.js";
 
-
 export const createOrder = async (req, res) => {
   // Validate input
   const {error,value} = createOrderValidator.validate(req.body);
@@ -18,11 +17,7 @@ export const createOrder = async (req, res) => {
 
     // Save the order to the database
     const savedOrder = await newOrder.save();
-
-    // Populate the product details in the saved order
-    const populatedOrder = await OrderModel.findById(savedOrder.
-      id).populate('items');
-
+    const populatedOrder = await OrderModel.findById(savedOrder.id).populate('items.productId');
 
     return res.status(201).json({
       message: "Order created successfully",
@@ -35,7 +30,6 @@ export const createOrder = async (req, res) => {
 
 export const getAllOrders = async (req, res) => {
   try {
-    // Fetch all orders from the database
     const orders = await OrderModel.find().populate('items');
 
     return res.status(200).json({
