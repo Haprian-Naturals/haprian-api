@@ -2,17 +2,14 @@ import { Schema } from "mongoose";
 import { Types, model } from "mongoose";
 import normalize from "normalize-mongoose";
 
+const itemSchema = new Schema({
+  productId: { type:Types.ObjectId, ref: 'Product', required: true },
+  quantity: { type: Number, required: true }
+});
+
 const orderSchema = new Schema({
-  items: [
-    { 
-      type: Types.ObjectId, 
-      ref: "Product",
-      quantity: Number, 
-      default: 1 
-    },
-  ],
-  
-  totalPrice: { type: Number, required: true },
+  items: [itemSchema],
+  totalPrice: { type: Number, required: true }
 });
   
 

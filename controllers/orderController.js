@@ -1,6 +1,5 @@
 import { OrderModel } from "../models/order.js";
 
-
 export const createOrder = async (req, res) => {
   const { items, totalPrice } = req.body;
 
@@ -10,19 +9,29 @@ export const createOrder = async (req, res) => {
       return res.status(400).json({ message: "Items and totalPrice are required." });
     }
 
+    // Validate each item in items array
+    if (!Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ message: "Items must be a non-empty array." });
+    }
+
+    for (const item of items) {
+      if (!item.productId || !item.quantity) {
+        return res.status(400).json({ message: "Each item must have a productId and quantity." });
+      }
+    }
+
     // Create a new order
     const newOrder = new OrderModel({
-     items,
+      items,
       totalPrice,
     });
 
+    console.log(newOrder)
     // Save the order to the database
     const savedOrder = await newOrder.save();
 
     // Populate the product details in the saved order
-    const populatedOrder = await OrderModel.findById(savedOrder.
-      id).populate('items');
-
+    const populatedOrder = await OrderModel.findById(savedOrder.id).populate('items.productId');
 
     return res.status(201).json({
       message: "Order created successfully",
