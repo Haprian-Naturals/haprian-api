@@ -14,4 +14,5 @@ const orderSchema = new Schema({
   
 
 orderSchema.plugin(normalize);
+itemSchema.plugin(normalize);
 export const OrderModel = model("Order", orderSchema);
