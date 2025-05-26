@@ -16,7 +16,7 @@ const productSchema = new Schema(
       enum: CategoryEnum, //Ensure only valid category value
       required: true,
     },
-    averageRating: {
+    rating: {
       type: Number,
       default: 0,
     },
