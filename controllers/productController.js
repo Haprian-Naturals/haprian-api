@@ -72,9 +72,8 @@ export const updateProduct = async (req, res, next) => {
 
     if (req.file && req.file.filename) {
       // Save the Cloudinary image URL
-      updateData.image = req.file.path;
+      updateData.image = req.file?.filename;
     }
-
     const result = await ProductModel.findByIdAndUpdate(
       req.params.id,
       updateData,
